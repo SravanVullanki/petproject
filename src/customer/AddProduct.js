@@ -32,7 +32,7 @@ export default function AddProduct() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('${config.url}/addproduct', formData);
+      const response = await axios.post(`${config.url}/addproduct`, formData);
       if (response.status === 200) {
         setFormData({
           name: '',
