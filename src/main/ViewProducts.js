@@ -7,7 +7,7 @@ export default function ViewProducts() {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('${config.url}/viewproducts');
+      const response = await axios.get(`${config.url}/viewproducts`);
       setProducts(response.data.map(product => ({ ...product, isDescriptionVisible: false })));
     } catch (error) {
       console.error(error.message);
