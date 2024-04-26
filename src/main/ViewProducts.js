@@ -1,6 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import config from '../config'
+import imageBelts from '../images/belts.png'; 
+import imageFood from '../images/food.png';
+import imageMedicines from '../images/medicines.png';
+import imagePreOwnedPets from '../images/preowned_pets.png';
+import imageNewlyBornPets from '../images/newlyborn_pets.png';
+import imageToys from '../images/toys.png';
+import imageTreats from '../images/treats.png';
+import imageOthers from '../images/others.png';
+
+const categoryImages = {
+  Belts: imageBelts,
+  Food: imageFood,
+  Medicines: imageMedicines,
+  'Pets(PreOwned)': imagePreOwnedPets,
+  'Pets(NewlyBorn)': imageNewlyBornPets,
+  Toys: imageToys,
+  Treats: imageTreats,
+  Others: imageOthers
+};
 
 export default function ViewProducts() {
   const [products, setProducts] = useState([]);
@@ -33,7 +52,9 @@ export default function ViewProducts() {
         {Array.isArray(products) && products.length > 0 ? (
           products.map((product, index) => (
             <div key={index} style={{ ...styles.productCard }}>
-              {/* <img src={product.image} alt="ImageHere" style={styles.productImage} /> */}
+               <div className="product-image">
+              <img src={categoryImages[product.category]} alt={product.name} />
+            </div>
               <div style={styles.productDetails}>
                 <h2>{product.name}</h2>
                 <p><strong>Category:</strong> {product.category}</p>
