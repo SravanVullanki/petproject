@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './PurchaseProduct.css'; // Import CSS file
-import config from '../config'
+import './PurchaseProduct.css'; 
+import config from '../config';
+import { Razorpay } from 'razorpay-checkout';
+import imageBelts from '../images/belts.png'; 
+import imageFood from '../images/food.png';
+import imageMedicines from '../images/medicines.png';
+import imagePreOwnedPets from '../images/preowned_pets.png';
+import imageNewlyBornPets from '../images/newlyborn_pets.png';
+import imageToys from '../images/toys.png';
+import imageTreats from '../images/treats.png';
+import imageOthers from '../images/others.png';
 
 export default function PurchaseProduct() {
   const [customerData, setCustomerData] = useState("");
@@ -12,8 +21,19 @@ export default function PurchaseProduct() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showDescription, setShowDescription] = useState({});
   const [purchaseMessage, setPurchaseMessage] = useState('');
-  const [autoOrderProductId, setAutoOrderProductId] = useState(''); // Track product for auto-order
+  const [autoOrderProductId, setAutoOrderProductId] = useState('');
   const [autoOrderTimeline, setAutoOrderTimeline] = useState('');
+
+  const categoryImages = {
+    Belts: imageBelts,
+    Food: imageFood,
+    Medicines: imageMedicines,
+    'Pets(PreOwned)': imagePreOwnedPets,
+    'Pets(NewlyBorn)': imageNewlyBornPets,
+    Toys: imageToys,
+    Treats: imageTreats,
+    Others: imageOthers
+  };
   
   useEffect(() => {
     const storedCustomerData = localStorage.getItem('customer');
@@ -28,7 +48,7 @@ export default function PurchaseProduct() {
     const timeout = setTimeout(() => {
       setPurchaseMessage('');
       setError('');
-    }, 5000); // Clear message after 5 seconds
+    }, 5000);
 
     return () => clearTimeout(timeout);
   }, [purchaseMessage, error]);
@@ -38,7 +58,6 @@ export default function PurchaseProduct() {
       const response = await axios.get(`${config.url}/viewproducts`);
       setProducts(response.data);
       setFilteredProducts(response.data);
-      // Initialize showDescription state for each product as false initially
       const initialShowDescriptionState = response.data.reduce((acc, curr) => {
         acc[curr._id] = false;
         return acc;
@@ -73,26 +92,27 @@ export default function PurchaseProduct() {
     setFilteredProducts(filtered);
   };
 
-  const purchaseProduct = async (productId, customerEmail) => {
-    try {
-      const response = await axios.post(`${config.url}/buyproduct`, { productId, customerEmail });
-      
-      if (response.status === 200 && response.data === 'Purchase Successful') {
-        setPurchaseMessage('Purchase Successful');
-        fetchProducts(); // Refresh products after successful purchase
-      } else if (response.status === 200 && response.data === 'Product is out of stock') {
-        setError('Product is out of stock. Please try again later.');
-      } else if (response.status === 200 && response.data === 'OOPS ... You have already bought this Product') {
-        setError('You have already bought this product.');
-      } else {
-        setError('Error buying product. Please try again later.');
+  const handleBuyNow = async (productName, productPrice) => {
+    const options = {
+      key: 'rzp_test_xUIHrkrkhUtUlU',
+      amount: productPrice * 100, // Convert price to paise (Razorpay expects price in paise)
+      currency: 'INR',
+      name: 'Your Company Name',
+      description: 'Adoption of ' + productName, // Update the description
+      image: '/your-company-logo.png',
+      handler: function(response) {
+        alert('Payment successful');
+        // You can add further actions here after successful payment
+      },
+      prefill: {
+        name: customerData?.name || '',
+        email: customerData?.email || '',
+        contact: customerData?.phone || ''
       }
-    } catch (error) {
-      console.error(error.message);
-      setError('Error buying product. Please try again later.');
-    }
+    };
+    const rzp = new Razorpay(options);
+    rzp.open();
   };
-  
 
   const toggleDescription = (productId) => {
     setShowDescription(prevState => ({
@@ -102,14 +122,11 @@ export default function PurchaseProduct() {
   };
 
   const handleAutoOrder = (productId) => {
-    // Implement auto order logic here for productId
     console.log('Auto order initiated for product:', productId, 'with timeline:', autoOrderTimeline);
-    // Simulate success message
     setPurchaseMessage(`Auto-ordering successful for ${autoOrderTimeline} days for productid : ${productId}`);
   };
 
   const handleAutoOrderClick = (productId) => {
-    // Set auto order product ID
     setAutoOrderProductId(productId);
   };
 
@@ -149,41 +166,42 @@ export default function PurchaseProduct() {
         </div>
       </div>
       <div className="product-container">
-      {filteredProducts.map(product => (
-  <div key={product._id} className="product-card">
-    <h4>{product.name}</h4>
-    <p>Category: {product.category}</p>
-    <p>Price: ₹{product.price}</p>
-    <p>Available Quantity: {product.quantity}</p>
-    {showDescription[product._id] && <p>Description: {product.description}</p>}
-    {product.category.toLowerCase().includes('pets') ? (
-      <button onClick={() => purchaseProduct(product._id, customerData.email)}>Adopt Now</button>
-    ) : (
-      <button onClick={() => purchaseProduct(product._id, customerData.email)}>Buy Now</button>
-    )}
-    <button onClick={() => toggleDescription(product._id)}>
-      {showDescription[product._id] ? 'Hide Description' : 'View Description'}
-    </button>
-    <div className="auto-order-section">
-      {autoOrderProductId === product._id ? (
-        <div className="auto-order-ui">
-          <select value={autoOrderTimeline} onChange={handleTimelineChange}>
-            <option value="">Select Timeline</option>
-            <option value="7">7 days</option>
-            <option value="14">14 days</option>
-            <option value="30">30 days</option>
-          </select>
-          <button onClick={() => handleAutoOrder(product._id)}>Perform Auto Order</button>
-        </div>
-      ) : (
-        <button onClick={() => handleAutoOrderClick(product._id)}>Auto Order</button>
-      )}
+        {filteredProducts.map(product => (
+          <div key={product._id} className="product-card">
+            <div className="product-image">
+              <img src={categoryImages[product.category]} alt={product.name} />
+            </div>
+            <h4>{product.name}</h4>
+            <p>Category: {product.category}</p>
+            <p>Price: ₹{product.price}</p>
+            <p>Available Quantity: {product.quantity}</p>
+            {showDescription[product._id] && <p>Description: {product.description}</p>}
+            {product.category.toLowerCase().includes('pets') ? (
+              <button onClick={() => handleBuyNow(product.name, product.price)}>Adopt Now</button>
+            ) : (
+              <button onClick={() => handleBuyNow(product.name, product.price)}>Buy Now</button>
+            )}
+            <button onClick={() => toggleDescription(product._id)}>
+              {showDescription[product._id] ? 'Hide Description' : 'View Description'}
+            </button>
+            <div className="auto-order-section">
+              {autoOrderProductId === product._id ? (
+                <div className="auto-order-ui">
+                  <select value={autoOrderTimeline} onChange={handleTimelineChange}>
+                    <option value="">Select Timeline</option>
+                    <option value="7">7 days</option>
+                    <option value="14">14 days</option>
+                    <option value="30">30 days</option>
+                  </select>
+                  <button onClick={() => handleAutoOrder(product._id)}>Perform Auto Order</button>
+                </div>
+              ) : (
+                <button onClick={() => handleAutoOrderClick(product._id)}>Auto Order</button>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
-  </div>
-))}
-
-    </div>
-  </div>
-);
+  );
 }
-
