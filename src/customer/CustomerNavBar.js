@@ -36,7 +36,7 @@ export default function CustomerNavBar() {
           </li>
           <li><Link to="/buyproduct">Purchase Product</Link></li>
           <li><Link to="/myorders">My Orders</Link></li> 
-          <li><Link to="/addproduct">Add Product</Link></li>
+          <li><Link to="/addproduct">Add Pre Owned Pets</Link></li>
           <li><Link to="/myproducts">My Products</Link></li>
           <li><Link to="/" className="logout-button" onClick={handleLogout}>Logout</Link></li>
         </ul>
