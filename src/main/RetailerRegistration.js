@@ -67,7 +67,7 @@ export default function RetailerRegistration() {
         return;
       }
 
-      const response = await axios.post('${config.url}/retailerapplicantregistration', formData);
+      const response = await axios.post(`${config.url}/retailerapplicantregistration`, formData);
       if (response.status === 200) {
         setFormData({
           fullname: '',
