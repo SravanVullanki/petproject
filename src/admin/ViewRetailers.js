@@ -7,7 +7,7 @@ export default function ViewRetailers() {
 
   const fetchRetailers = async () => {
     try {
-      const response = await axios.get('${config.url}/viewretailers');
+      const response = await axios.get(`${config.url}/viewretailers`);
       setRetailers(response.data);
     } catch (error) {
       console.error(error.message);
