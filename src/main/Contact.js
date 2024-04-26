@@ -1,5 +1,4 @@
 import React from 'react';
-import config from '../config'
 export default function Contact() {
   return (
     <div style={styles.container}>
