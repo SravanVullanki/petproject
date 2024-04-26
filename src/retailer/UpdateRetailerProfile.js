@@ -45,7 +45,7 @@ export default function UpdateRetailerProfile() {
       if (Object.keys(updatedData).length !== 0) {
         // There are changes
         updatedData.email = retailerData.email;
-        const response = await axios.put('${config.url}/updateretailerprofile', updatedData);
+        const response = await axios.put(`${config.url}/updateretailerprofile`, updatedData);
         setMessage(response.data);
         setError('');
         const res = await axios.get(`${config.url}/retailerprofile/${retailerData.email}`);
