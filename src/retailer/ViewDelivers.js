@@ -36,7 +36,7 @@ export default function ViewDeliveries() {
 
   const handleStatusUpdate = async (orderId, status) => {
     try {
-      const response = await axios.put('${config.url}/updateproductorderstatus', { orderId, status });
+      const response = await axios.put(`${config.url}/updateproductorderstatus`, { orderId, status });
       console.log(response.data);
       fetchDeliveries();
     } catch (error) {
