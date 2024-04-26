@@ -21,7 +21,7 @@ export default function RetailerLogin({onRetailerLogin}) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('${config.url}/checkretailerlogin', formData);
+      const response = await axios.post(`${config.url}/checkretailerlogin`, formData);
       if (response.data != null) {
         onRetailerLogin();
 
