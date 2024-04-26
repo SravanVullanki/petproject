@@ -7,7 +7,7 @@ import AddProduct from './AddProduct';
 import ViewDelivers from './ViewDelivers'; 
 import MyProductsPage from './MyProductsPage'
 import './retailer.css';
-import config from '../config'
+
 
 export default function RetailerNavBar() {
   const navigate = useNavigate();
