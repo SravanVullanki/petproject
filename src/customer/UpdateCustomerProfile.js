@@ -45,7 +45,7 @@ export default function UpdateCustomerProfile() {
       if (Object.keys(updatedData).length !== 0) {
         // There are changes
         updatedData.email = customerData.email;
-        const response = await axios.put('${config.url}/updatecustomerprofile', updatedData);
+        const response = await axios.put(`${config.url}/updatecustomerprofile`, updatedData);
         setMessage(response.data);
         setError('');
         const res = await axios.get(`${config.url}/customerprofile/${customerData.email}`, updatedData)
