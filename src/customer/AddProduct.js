@@ -60,7 +60,7 @@ export default function AddProduct() {
 
       <form onSubmit={handleSubmit} style={styles.form}>
         <div style={styles.formGroup}>
-          <label style={styles.label}>Product Name:</label>
+          <label style={styles.label}>Pet Name:</label>
           <input type="text" id="name" value={formData.name} onChange={handleChange} required style={styles.input} />
         </div>
         <div style={styles.formGroup}>
@@ -78,7 +78,7 @@ export default function AddProduct() {
           <input type="number" id="price" value={formData.price} onChange={handleChange} required style={styles.input} />
         </div>
         <div style={styles.formGroup}>
-          <label style={styles.label}>Quantity:</label>
+          <label style={styles.label}>Age:</label>
           <input type="number" id="quantity" value={formData.quantity} onChange={handleChange} required style={styles.input} />
         </div>
         <div style={styles.formGroup}>
