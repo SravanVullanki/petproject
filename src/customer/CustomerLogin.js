@@ -22,7 +22,7 @@ export default function CustomerLogin({ onCustomerLogin }) {
     e.preventDefault();
     try 
     {
-      const response = await axios.post('${config.url}/checkcustomerlogin', formData);
+      const response = await axios.post(`${config.url}/checkcustomerlogin`, formData);
       if (response.data != null) 
       {
         onCustomerLogin();
