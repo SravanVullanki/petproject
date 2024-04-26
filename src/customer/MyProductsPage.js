@@ -48,7 +48,7 @@ const MyProductsPage = () => {
               <h3>{product.name}</h3>
               <p>Category: {product.category}</p>
               <p>Price: ${product.price}</p>
-              <p>Quantity: {product.quantity}</p>
+              <p>Age: {product.quantity}</p>
               <p>Description: {product.description}</p>
             </div>
           ))
