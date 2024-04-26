@@ -65,7 +65,7 @@ export default function AddRetailer() {
         return;
       }
 
-      const response = await axios.post('${config.url}/addretailer', formData);
+      const response = await axios.post(`${config.url}/addretailer`, formData);
       if (response.status === 200) {
         setFormData({
           fullname: '',
