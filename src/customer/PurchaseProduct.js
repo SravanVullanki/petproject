@@ -35,7 +35,7 @@ export default function PurchaseProduct() {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('${config.url}/viewproducts');
+      const response = await axios.get(`${config.url}/viewproducts`);
       setProducts(response.data);
       setFilteredProducts(response.data);
       // Initialize showDescription state for each product as false initially
@@ -75,7 +75,7 @@ export default function PurchaseProduct() {
 
   const purchaseProduct = async (productId, customerEmail) => {
     try {
-      const response = await axios.post('${config.url}/buyproduct', { productId, customerEmail });
+      const response = await axios.post(`${config.url}/buyproduct`, { productId, customerEmail });
       
       if (response.status === 200 && response.data === 'Purchase Successful') {
         setPurchaseMessage('Purchase Successful');
