@@ -14,7 +14,7 @@ export default function ViewRetailerApplicants() {
 
   const fetchRetailerApplicants = async () => {
     try {
-      const response = await axios.get('${config.url}/viewretailerapplicants');
+      const response = await axios.get(`${config.url}/viewretailerapplicants`);
       setRetailerApplicants(response.data);
       setLoading(false);
     } catch (error) {
@@ -35,7 +35,7 @@ export default function ViewRetailerApplicants() {
         rejectionMessage: status === 'rejected' ? rejectionMessage : ''
       };
 
-      await axios.post('${config.url}/changeretailerstatus', requestData);
+      await axios.post(`${config.url}/changeretailerstatus`, requestData);
       // Refresh retailer applicants after status change
       fetchRetailerApplicants();
       setRejectionMessage(''); // Clear rejection message after submission
