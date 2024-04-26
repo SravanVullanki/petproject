@@ -8,7 +8,6 @@ import PurchaseProduct from './PurchaseProduct';
 import MyOrders from './MyOrders'; // Import the new component
 import AddProduct from './AddProduct';
 import MyProductsPage from './MyProductsPage';
-import config from '../config'
 
 import './style.css';
 
