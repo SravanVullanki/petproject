@@ -8,7 +8,7 @@ export default function ViewCustomers() {
 
   const fetchCustomers = async () => {
     try {
-      const response = await axios.get('${config.url}/viewcustomers');
+      const response = await axios.get(`${config.url}/viewcustomers`);
       setCustomers(response.data);
     } catch (error) {
       console.error(error.message);
