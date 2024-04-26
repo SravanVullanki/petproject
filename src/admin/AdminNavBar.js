@@ -6,7 +6,6 @@ import ViewCustomers from './ViewCustomers';
 import ViewRetailers from './ViewRetailers'
 import AddRetailer from './AddRetailer'
 import ViewRetailerApplicants from './ViewRetailerApplicants'
-import config from '../config'
 export default function AdminNavBar() {
   const navigate = useNavigate();
 
