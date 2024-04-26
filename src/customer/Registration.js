@@ -80,7 +80,7 @@ export default function Registration() {
         return;
       }
 
-      const response = await axios.post('${config.url}/insertcustomer', {
+      const response = await axios.post(`${config.url}/insertcustomer`, {
         ...formData,
         confirmPassword: undefined 
       });
