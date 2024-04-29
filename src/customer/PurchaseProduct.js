@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './PurchaseProduct.css'; 
+import './PurchaseProduct.css';
 import config from '../config';
-import { Razorpay } from 'razorpay-checkout';
-import imageBelts from '../images/belts.png'; 
+import imageBelts from '../images/belts.png';
 import imageFood from '../images/food.png';
 import imageMedicines from '../images/medicines.png';
 import imagePreOwnedPets from '../images/preowned_pets.png';
@@ -13,7 +12,7 @@ import imageTreats from '../images/treats.png';
 import imageOthers from '../images/others.png';
 
 export default function PurchaseProduct() {
-  const [customerData, setCustomerData] = useState("");
+  const [customerData, setCustomerData] = useState({});
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [error, setError] = useState('');
@@ -24,17 +23,6 @@ export default function PurchaseProduct() {
   const [autoOrderProductId, setAutoOrderProductId] = useState('');
   const [autoOrderTimeline, setAutoOrderTimeline] = useState('');
 
-  const categoryImages = {
-    Belts: imageBelts,
-    Food: imageFood,
-    Medicines: imageMedicines,
-    'Pets(PreOwned)': imagePreOwnedPets,
-    'Pets(NewlyBorn)': imageNewlyBornPets,
-    Toys: imageToys,
-    Treats: imageTreats,
-    Others: imageOthers
-  };
-  
   useEffect(() => {
     const storedCustomerData = localStorage.getItem('customer');
     if (storedCustomerData) {
@@ -92,26 +80,19 @@ export default function PurchaseProduct() {
     setFilteredProducts(filtered);
   };
 
-  const handleBuyNow = async (productName, productPrice) => {
-    const options = {
-      key: 'rzp_test_xUIHrkrkhUtUlU',
-      amount: productPrice * 100, // Convert price to paise (Razorpay expects price in paise)
-      currency: 'INR',
-      name: 'Your Company Name',
-      description: 'Adoption of ' + productName, // Update the description
-      image: '/your-company-logo.png',
-      handler: function(response) {
-        alert('Payment successful');
-        // You can add further actions here after successful payment
-      },
-      prefill: {
-        name: customerData?.name || '',
-        email: customerData?.email || '',
-        contact: customerData?.phone || ''
+  const purchaseProduct = async (productId, customerEmail) => {
+    try {
+      const response = await axios.post(`${config.url}/buyproduct`, { productId, customerEmail });
+      if (response.data === 'Purchase Successful') {
+        setPurchaseMessage('Purchase Successful');
+        fetchProducts();
+      } else {
+        setPurchaseMessage('Out of Stock');
       }
-    };
-    const rzp = new Razorpay(options);
-    rzp.open();
+    } catch (error) {
+      console.error(error.response.data);
+      setError('Error buying product. Please try again later.');
+    }
   };
 
   const toggleDescription = (productId) => {
@@ -176,11 +157,9 @@ export default function PurchaseProduct() {
             <p>Price: ₹{product.price}</p>
             <p>Available Quantity: {product.quantity}</p>
             {showDescription[product._id] && <p>Description: {product.description}</p>}
-            {product.category.toLowerCase().includes('pets') ? (
-              <button onClick={() => handleBuyNow(product.name, product.price)}>Adopt Now</button>
-            ) : (
-              <button onClick={() => handleBuyNow(product.name, product.price)}>Buy Now</button>
-            )}
+            <button onClick={() => purchaseProduct(product._id, customerData.email)}>
+              {product.category.toLowerCase().includes('pets') ? 'Adopt Now' : 'Buy Now'}
+            </button>
             <button onClick={() => toggleDescription(product._id)}>
               {showDescription[product._id] ? 'Hide Description' : 'View Description'}
             </button>
@@ -205,3 +184,14 @@ export default function PurchaseProduct() {
     </div>
   );
 }
+
+const categoryImages = {
+  Belts: imageBelts,
+  Food: imageFood,
+  Medicines: imageMedicines,
+  'Pets(PreOwned)': imagePreOwnedPets,
+  'Pets(NewlyBorn)': imageNewlyBornPets,
+  Toys: imageToys,
+  Treats: imageTreats,
+  Others: imageOthers
+};
